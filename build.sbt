@@ -31,3 +31,19 @@ lazy val root = (project in file("."))
   )
   .settings(libraryDependencies ++= commonTestLibs)
   .settings(scalacOptions ++= Seq("-feature", "-deprecation"))
+
+credentials += Credentials(
+    "Artifactory Realm",
+    "flow.artifactoryonline.com",
+    System.getenv("ARTIFACTORY_USERNAME"),
+    System.getenv("ARTIFACTORY_PASSWORD")
+  )
+
+publishTo := {
+  val host = "https://flow.artifactoryonline.com/flow"
+  if (isSnapshot.value) {
+    Some("Artifactory Realm" at s"$host/libs-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
+  } else {
+    Some("Artifactory Realm" at s"$host/libs-release-local")
+  }
+}
